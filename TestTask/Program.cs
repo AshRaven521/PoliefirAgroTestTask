@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace TestTask
 {
@@ -10,48 +7,35 @@ namespace TestTask
     {
         static void Main(string[] args)
         {
-            TaskOne();
-        }
-
-        static void TaskOne()
-        {
-            string filePath = @"C:\PoliefirAgroTestTask\test.txt";
-
-            string fileData = string.Empty;
-
-            using (var streamReader = new StreamReader(filePath, Encoding.Default))
+            Console.WriteLine("Задание №1\n");
+            string fullPath = Path.GetFullPath("test.txt");
+            Console.WriteLine($"Файл с тестовыми значениями: {fullPath}");
+            try
             {
-                fileData = streamReader.ReadToEnd();
+                TaskOne.Do("test.txt");
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Произошла ошибка: {ex.Message}");
             }
 
-            var words = fileData.Trim().Split(' ');
+            Console.WriteLine("\nЗадание №2\n");
+            Console.Write("Введите выражение в виде обратной польской записи: ");
+            string input = Console.ReadLine();
 
-            var results = CountWordsOccurance(words).OrderByDescending(a => a.Value);
-
-            Console.WriteLine("Слово из файла - количество вхождений:\n");
-            foreach (KeyValuePair<string, int> result in results)
+            try
             {
-                Console.WriteLine($"{result.Key} - {result.Value}");
+                var result = TaskTwo.Calculate(input);
+                Console.WriteLine($"Результат вычисления выражения в обратной польской записи: {result}");
+                string infixForm = TaskTwo.GetInfixForm(input);
+                Console.WriteLine($"Инфиксная форма: {infixForm} = {result}");
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"Произошла ошибка: {ex.Message}");
             }
         }
-
-        static Dictionary<string, int> CountWordsOccurance(string[] array)
-        {
-            var dict = new Dictionary<string, int>();
-
-            foreach (var arr in array)
-            {
-                int wordCount;
-
-                if(!dict.TryGetValue(arr, out wordCount))
-                {
-                    wordCount = 0;
-                }
-
-                dict[arr] = wordCount + 1;
-            }
-
-            return dict;
-        }
+    
     }
 }
